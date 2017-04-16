@@ -105,8 +105,8 @@
     fancybox: true,
     motion: true,
     duoshuo: {
-      userId: 'undefined',
-      author: '博主'
+      userId: '0',
+      author: 'Author'
     },
     algolia: {
       applicationID: '',
@@ -536,10 +536,28 @@ document.getElementById("showDays").innerHTML = "&nbsp;&nbsp;已运行 "+total+"
 
   
 
+    <script type="text/javascript">
+      var disqus_shortname = 'realtcg';
+      var disqus_identifier = 'archives/2017/04/index.html';
+
+      var disqus_title = "";
 
 
+      function run_disqus_script(disqus_script) {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }
 
-	
+      run_disqus_script('count.js');
+
+      
+
+    </script>
+  
+
 
 
 
