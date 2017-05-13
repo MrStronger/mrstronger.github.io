@@ -110,7 +110,7 @@ isArray() -判断某个值是不是数组类型
 join(&amp;quot;分隔符&amp;quot;)
 
 12var a">
-<meta property="og:updated_time" content="2017-05-13T02:33:50.113Z">
+<meta property="og:updated_time" content="2017-05-13T02:48:43.626Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript常用函数总结(一)">
 <meta name="twitter:description" content="JavaScript常用函数总结（一）
@@ -363,16 +363,16 @@ join(&amp;quot;分隔符&amp;quot;)
 </ul>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]; </div><div class="line"><span class="keyword">var</span> b = a.join(<span class="string">"|"</span>); <span class="comment">//a：[1,2,3,4,5] b："1|2|3|4|5"</span></div></pre></td></tr></table></figure>
 <ul>
-<li>栈方法<ul>
+<li><p>栈方法</p>
+<ul>
 <li><code>push()</code> -可以接受任意数量的参数，把它们逐个添加到数组末尾，并返回修改后数组的长度：</li>
 </ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> colors = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line"><span class="keyword">var</span> count = colors.push(<span class="string">"red"</span>,<span class="string">"green"</span>);</div><div class="line"><span class="built_in">console</span>.log(colors);<span class="comment">//["red","green"]</span></div><div class="line"><span class="built_in">console</span>.log(count);<span class="comment">//2</span></div></pre></td></tr></table></figure>
+</li>
+<li><p><code>pop()</code> -从数组末尾移除最后一项，减少数组length值，然后返回移除的项</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> item = colors.pop();</div><div class="line"><span class="built_in">console</span>.log(item);<span class="comment">//"green"</span></div><div class="line"><span class="built_in">console</span>.log(colors.length);<span class="comment">//1</span></div></pre></td></tr></table></figure>
 </li>
 </ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> colors = <span class="keyword">new</span> <span class="built_in">Array</span>();</div><div class="line"><span class="keyword">var</span> count = colors.push(<span class="string">"red"</span>,<span class="string">"green"</span>);</div><div class="line"><span class="built_in">console</span>.log(colors);<span class="comment">//["red","green"]</span></div><div class="line"><span class="built_in">console</span>.log(count);<span class="comment">//2</span></div></pre></td></tr></table></figure>
-<ul>
-<li><code>pop()</code> -从数组末尾移除最后一项，减少数组length值，然后返回移除的项</li>
-</ul>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> item = colors.pop();</div><div class="line"><span class="built_in">console</span>.log(item);<span class="comment">//"green"</span></div><div class="line"><span class="built_in">console</span>.log(colors.length);<span class="comment">//1</span></div></pre></td></tr></table></figure>
 <ul>
 <li><p>队列方法</p>
 <ul>
