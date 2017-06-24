@@ -102,7 +102,7 @@
 <meta property="og:image" content="https://ooo.0o0.ooo/2017/06/24/594e533b01add.png">
 <meta property="og:image" content="https://ooo.0o0.ooo/2017/06/24/594e533af3e80.png">
 <meta property="og:image" content="https://ooo.0o0.ooo/2017/06/24/594e533b1d9de.png">
-<meta property="og:updated_time" content="2017-06-24T12:15:09.823Z">
+<meta property="og:updated_time" content="2017-06-24T12:22:38.492Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用React技术栈的一些收获">
 <meta name="twitter:description" content="前言前些日子刚学习了React，觉得很不错，很符合我的逻辑。于是还没弄明白，就迫不及待的开始了一个中型项目(我觉得）（其实是项目需要赶紧开始，没时间了…咳咳）。期间不出所料地遇到了很多坑和问题，也得到了很多收获，特开几篇文章记录下来。
@@ -358,7 +358,7 @@
 <p>在每个页面下，index.js是获得每个页面的入口，每个页面都有自己的<code>components</code>和<code>containers</code>以及<code>actions</code>和<code>reducers</code>，目录看起来像这样：<br><img src="https://ooo.0o0.ooo/2017/06/24/594e533b01add.png" alt="Alt 每个页面下的目录结构"></p>
 <p><code>components</code>和<code>containers</code>都是这个页面下的组件和容器，如果其他页面也会使用里面的组件和容器，就会把他们放在src/component和src/containers下共用。modules下的文件是这个页面所有的action和reducer。如果页面逻辑可以分离，会把各逻辑下的reducer抽离并单开一个index.js，并在其中combine：</p>
 <p>​                <img src="https://ooo.0o0.ooo/2017/06/24/594e533af3e80.png" alt=""><code>=&gt;</code><img src="https://ooo.0o0.ooo/2017/06/24/594e533b1d9de.png" alt=""></p>
-<h3 id="总结与反思"><a href="#总结与反思" class="headerlink" title="总结与反思"></a>总结与反思</h3><p>通过上述架构，项目代码逻辑变得很清晰，每一个文件都有其专属的功能，互不影响，开发过程变得工程化、流程化，思路很清晰，代码出错率也随之降低。React router <code>plain object</code>+redux <code>combineReducer</code>很好的将代码按不同页面做了分割;而 <code>getComponent</code> + <code>webpack ensure</code>又做到了页面的按需加载，项目页面运行速度提升了不少。但是有一个问题，在react route4.0版本中<code>getComponent</code>被移除了，并提供了更加简洁的方式（实际上就是替你做了按需加载）：Bundle组件+webpack 加载器undle-loader。使用这种方式的话，目录结构将会变得更简单、更容易理解，避免了多层嵌套。</p>
+<h3 id="总结与反思"><a href="#总结与反思" class="headerlink" title="总结与反思"></a>总结与反思</h3><p>通过上述架构，项目代码逻辑变得很清晰，每一个文件都有其专属的功能，互不影响，开发过程变得工程化、流程化，思路很清晰，代码出错率大大降低，开发速度大大提高。React router <code>plain object</code>+redux <code>combineReducer</code>的组合很好的将代码按不同页面做了分割;而 <code>getComponent</code> + <code>webpack ensure</code>又做到了页面的按需加载，项目页面运行速度提升了不少。但是有一个问题，在react route4.0版本中<code>getComponent</code>被移除了，并提供了更加简洁的方式（实际上就是替你做了按需加载）：Bundle组件+webpack 加载器undle-loader。使用这种方式的话，目录结构将会变得更简单、更容易理解，避免了多层嵌套，因此，项目还需要改善。</p>
 
       
     </div>
