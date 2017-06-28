@@ -101,7 +101,7 @@
 <meta property="og:image" content="https://ooo.0o0.ooo/2017/06/28/595398ee54b1a.png">
 <meta property="og:image" content="https://ooo.0o0.ooo/2017/06/28/595398ff8a44a.png">
 <meta property="og:image" content="https://ooo.0o0.ooo/2017/06/28/595398b92d076.png">
-<meta property="og:updated_time" content="2017-06-28T12:26:16.855Z">
+<meta property="og:updated_time" content="2017-06-28T12:30:12.772Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用React技术栈的一些收获(二)">
 <meta name="twitter:description" content="前言
@@ -341,7 +341,7 @@
 <p><strong><code>注意</code></strong> 这篇文章并不是教程，只是我对React原理的一些个人理解，欢迎与我一起讨论。文章不对的地方，还请读者费心指出^-^</p>
 </blockquote>
 <p>随着项目开发的深入，不可避免了遇到了一些问题。刚开始出现问题时很懵，不知道该怎么解决，原因就是对React的原理理解的不够透彻，不知道问题出在哪。在解决问题的过程中，也逐渐深入了解了React的一些原理，这篇文章就来分享一下我对React一些原理的理解。</p>
-<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>本文是《使用React技术栈的一些收获》系列文章的第二篇（第一篇在<a href="http://realtcg.com/2017/06/24/%E4%BD%BF%E7%94%A8React%E6%8A%80%E6%9C%AF%E6%A0%88%E7%9A%84%E4%B8%80%E4%BA%9B%E6%94%B6%E8%8E%B7/">这里</a>，介绍如何开始构建React大型项目），简单介绍了React一些原理，包括React合成事件系统、组件的生命周期以及<code>setState()</code>。</p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>本文是《使用React技术栈的一些收获》系列文章的第二篇(第一篇在<a href="http://realtcg.com/2017/06/24/%E4%BD%BF%E7%94%A8React%E6%8A%80%E6%9C%AF%E6%A0%88%E7%9A%84%E4%B8%80%E4%BA%9B%E6%94%B6%E8%8E%B7/">这里</a>，介绍如何开始构建React大型项目)，简单介绍了React一些原理，包括React合成事件系统、组件的生命周期以及<code>setState()</code>。</p>
 <h3 id="React合成事件系统"><a href="#React合成事件系统" class="headerlink" title="React合成事件系统"></a>React合成事件系统</h3><p>React快速的原因之一就是React很少直接操作DOM，浏览器事件也是一样。原因是太多的浏览器事件会占用很大内存。</p>
 <p>React为此自己实现了一套合成系统，在DOM事件体系基础上做了很大改进，减少了内存消耗，简化了事件逻辑，最大化解决浏览器兼容问题。</p>
 <p><strong>其基本原理就是，所有在JSX声明的事件都会被委托在顶层document节点上，并根据事件名和组件名存储回调函数(<code>listenerBank</code>)。每次当某个组件触发事件时，在document节点上绑定的监听函数（<code>dispatchEvent</code>）就会找到这个组件和它的所有父组件(<code>ancestors</code>)，对每个组件创建对应React合成事件(<code>SyntheticEvent</code>)并批处理(<code>runEventQueueInBatch(events)</code>)，从而根据事件名和组件名调用(<code>invokeGuardedCallback</code>)回调函数。</strong></p>
