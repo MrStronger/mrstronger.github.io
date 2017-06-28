@@ -1,0 +1,725 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="React," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="前言
+注意 这篇文章并不是教程，只是我对React原理的一些个人理解，欢迎与我一起讨论。文章不对的地方，还请读者费心指出^-^
+
+随着项目开发的深入，不可避免了遇到了一些问题。刚开始出现问题时很懵，不知道该怎么解决，原因就是对React的原理理解的不够透彻，不知道问题出在哪。在解决问题的过程中，也逐渐深入了解了React的一些原理，这篇文章就来分享一下我对React一些原理的理解。
+概述本文是《使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用React技术栈的一些收获(二)">
+<meta property="og:url" content="http://realtcg.com/2017/06/25/使用React技术栈的一些收获-二/index.html">
+<meta property="og:site_name" content="莫凡">
+<meta property="og:description" content="前言
+注意 这篇文章并不是教程，只是我对React原理的一些个人理解，欢迎与我一起讨论。文章不对的地方，还请读者费心指出^-^
+
+随着项目开发的深入，不可避免了遇到了一些问题。刚开始出现问题时很懵，不知道该怎么解决，原因就是对React的原理理解的不够透彻，不知道问题出在哪。在解决问题的过程中，也逐渐深入了解了React的一些原理，这篇文章就来分享一下我对React一些原理的理解。
+概述本文是《使">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/28/595398ee54b1a.png">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/28/595398ff8a44a.png">
+<meta property="og:image" content="https://ooo.0o0.ooo/2017/06/28/595398b92d076.png">
+<meta property="og:updated_time" content="2017-06-28T11:56:11.779Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用React技术栈的一些收获(二)">
+<meta name="twitter:description" content="前言
+注意 这篇文章并不是教程，只是我对React原理的一些个人理解，欢迎与我一起讨论。文章不对的地方，还请读者费心指出^-^
+
+随着项目开发的深入，不可避免了遇到了一些问题。刚开始出现问题时很懵，不知道该怎么解决，原因就是对React的原理理解的不够透彻，不知道问题出在哪。在解决问题的过程中，也逐渐深入了解了React的一些原理，这篇文章就来分享一下我对React一些原理的理解。
+概述本文是《使">
+<meta name="twitter:image" content="https://ooo.0o0.ooo/2017/06/28/595398ee54b1a.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"hide"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://realtcg.com/2017/06/25/使用React技术栈的一些收获-二/"/>
+
+
+
+
+
+  <title> 使用React技术栈的一些收获(二) | 莫凡 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3f3a5a8fd2b4cc3b3813fd00426fa25d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">莫凡</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">陶成国</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://realtcg.com/2017/06/25/使用React技术栈的一些收获-二/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="mofan">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="莫凡">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="莫凡" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                使用React技术栈的一些收获(二)
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-25T17:12:58+08:00">
+                2017-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><blockquote>
+<p><strong><code>注意</code></strong> 这篇文章并不是教程，只是我对React原理的一些个人理解，欢迎与我一起讨论。文章不对的地方，还请读者费心指出^-^</p>
+</blockquote>
+<p>随着项目开发的深入，不可避免了遇到了一些问题。刚开始出现问题时很懵，不知道该怎么解决，原因就是对React的原理理解的不够透彻，不知道问题出在哪。在解决问题的过程中，也逐渐深入了解了React的一些原理，这篇文章就来分享一下我对React一些原理的理解。</p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>本文是《使用React技术栈的一些收获》系列文章的第二篇，简单介绍了React一些原理，包括React合成事件系统、组件的生命周期以及<code>setState()</code>。</p>
+<h3 id="React合成事件系统"><a href="#React合成事件系统" class="headerlink" title="React合成事件系统"></a>React合成事件系统</h3><p>React快速的原因之一就是React很少直接操作DOM，浏览器事件也是一样。原因是太多的浏览器事件会占用很大内存。</p>
+<p>React为此自己实现了一套合成系统，在DOM事件体系基础上做了很大改进，减少了内存消耗，简化了事件逻辑，最大化解决浏览器兼容问题。</p>
+<p><strong>其基本原理就是，所有在JSX声明的事件都会被委托在顶层document节点上，并根据事件名和组件名存储回调函数(<code>listenerBank</code>)。每次当某个组件触发事件时，在document节点上绑定的监听函数（<code>dispatchEvent</code>）就会找到这个组件和它的所有父组件(<code>ancestors</code>)，对每个组件创建对应React合成事件(<code>SyntheticEvent</code>)并批处理(<code>runEventQueueInBatch(events)</code>)，从而根据事件名和组件名调用(<code>invokeGuardedCallback</code>)回调函数。</strong></p>
+<p>因此，如果你采用下面这种写法，并且这样的P标签有很多个：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">listView = list.map(<span class="function">(<span class="params">item,index</span>) =&gt;</span> &#123;</div><div class="line">    <span class="keyword">return</span> (</div><div class="line">        &lt;p onClick=&#123;this.handleClick&#125; key=&#123;item.id&#125;&gt;&#123;item.text&#125;&lt;/p&gt;</div><div class="line">    )</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>That’s OK，React帮你实现了<code>事件委托</code>。我之前因为不了解React合成事件系统，还显示的使用了事件委托，现在看来是多此一举的。</p>
+<p>由于React合成事件系统模拟事件冒泡的方法是构建一个自己及父组件队列，因此也带来一个问题，合成事件不能阻止原生事件，原生事件可以阻止合成事件。用 <code>event.stopPropagation()</code> 并不能停止事件传播，应该使用 React 定义的 <code>event.preventDefault()</code>。</p>
+<p>如果你想详细了解React合成事件系统，移步<a href="http://blog.csdn.net/u013510838/article/details/61224760" target="_blank" rel="external">http://blog.csdn.net/u013510838/article/details/61224760</a></p>
+<h3 id="组件的生命周期（以父子组件为例）"><a href="#组件的生命周期（以父子组件为例）" class="headerlink" title="组件的生命周期（以父子组件为例）"></a>组件的生命周期（以父子组件为例）</h3><p>为了搞清楚组件生命周期，构造一个父组件包含子组件并且重写各生命周期函数的场景：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Child</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</div><div class="line">  <span class="keyword">constructor</span>() &#123;</div><div class="line">    <span class="keyword">super</span>()</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'Child was created!'</span>)</div><div class="line">  &#125;</div><div class="line">  componentWillMount()&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'Child componentWillMount!'</span>)</div><div class="line">  &#125;</div><div class="line">  componentDidMount()&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'Child componentDidMount!'</span>)</div><div class="line">  &#125;</div><div class="line">  componentWillReceiveProps(nextProps)&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'Child componentWillReceiveProps:'</span>+nextProps.data )</div><div class="line">  &#125;</div><div class="line">  shouldComponentUpdate(nextProps, nextState)&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'Child shouldComponentUpdate:'</span>+ nextProps.data)</div><div class="line">    <span class="keyword">return</span> <span class="literal">true</span></div><div class="line">  &#125;</div><div class="line">  componentWillUpdate(nextProps, nextState)&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'Child componentWillUpdate:'</span>+ nextProps.data)</div><div class="line">  &#125;</div><div class="line">  componentDidUpdate()&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'Child componentDidUpdate'</span>)</div><div class="line">  &#125;</div><div class="line">  render() &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'render Child!'</span>)</div><div class="line">    <span class="keyword">return</span> (      </div><div class="line">      &lt;h1&gt;Child recieve props: &#123;this.props.data&#125;&lt;/h1&gt;      </div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</div><div class="line">  <span class="comment">// ... 前面跟子组件一样</span></div><div class="line">  handleChangeState()&#123;</div><div class="line">    <span class="keyword">this</span>.setState(&#123;<span class="attr">randomData</span>: <span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random()*<span class="number">50</span>)&#125;)</div><div class="line">  &#125;</div><div class="line">  render() &#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'render Father!'</span>)</div><div class="line">    <span class="keyword">return</span> (</div><div class="line">      &lt;div&gt;</div><div class="line">        &lt;Child data=&#123;this.state.randomData&#125; /&gt;</div><div class="line">        &lt;h1&gt;Father State: &#123; this.state.randomData&#125;&lt;/h1&gt;      </div><div class="line">        &lt;button onClick=&#123;this.handleChangeState&#125;&gt;切换状态&lt;/button&gt;</div><div class="line">      &lt;/div&gt;</div><div class="line">    );</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">React.render(</div><div class="line">  &lt;Father /&gt;,</div><div class="line">  document.getElementById('root')</div><div class="line">);</div></pre></td></tr></table></figure>
+<p>结果如下：<br>刚开始<br><img src="https://ooo.0o0.ooo/2017/06/28/595398ee54b1a.png" alt="Alt text"><br>调用父组件的setState后：<br><img src="https://ooo.0o0.ooo/2017/06/28/595398ff8a44a.png" alt="Alt text"><br><a href="http://jsbin.com/kihogom/edit?js,console,output" target="_blank" rel="external">在Jsbin上试试看</a><br>有一张图能说明这之间的流程（<a href="http://www.jianshu.com/p/4784216b8194" target="_blank" rel="external">图片来源</a>）：<br><img src="https://ooo.0o0.ooo/2017/06/28/595398b92d076.png" alt="Alt text"></p>
+<h3 id="setState并不奇怪"><a href="#setState并不奇怪" class="headerlink" title="setState并不奇怪"></a>setState并不奇怪</h3><p>有一个能反映问题的场景：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">state = &#123;</div><div class="line">	<span class="attr">count</span>: <span class="number">0</span></div><div class="line">&#125;</div><div class="line">componentDidMount() &#123;</div><div class="line">  <span class="keyword">this</span>.setState(&#123;<span class="attr">count</span>: <span class="keyword">this</span>.state.count + <span class="number">1</span>&#125;)</div><div class="line">  <span class="keyword">this</span>.setState(&#123;<span class="attr">count</span>: <span class="keyword">this</span>.state.count + <span class="number">1</span>&#125;)</div><div class="line">  <span class="keyword">this</span>.setState(&#123;<span class="attr">count</span>: <span class="keyword">this</span>.state.count + <span class="number">1</span>&#125;)</div><div class="line">&#125;</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>看起来state.count被增加了三次，但结果是增加了一次。这并不奇怪：</p>
+<p>React快的原因之一就是，在执行<code>this.setState()</code>时，React没有忙着立即更新<code>state</code>，只是把新的<code>state</code>存到一个队列（<code>batchUpdate</code>）中。上面三次执行<code>setState</code>只是对传进去的对象进行了合并,然后再统一处理（批处理），触发重新渲染过程，因此只重新渲染一次，结果只增加了一次。这样做是非常明智的，因为在一个函数里调用多个setState是常见的，如果每一次调用setState都要引发重新渲染，显然不是最佳实践。React官方文档里也说了：</p>
+<blockquote>
+<p>Think of <code>setState()</code> as a <strong>request</strong> rather than an immediate command to update the component.</p>
+<p>把<code>setState()</code> 看作是重新render的一次请求而不是立刻更新组件的指令。</p>
+</blockquote>
+<p><strong>那么调用<code>this.setState()</code>后什么时候this.state才会更新？</strong><br>答案是即将要执行下一次的<code>render</code>函数时。</p>
+<p><strong>这之间发生了什么？</strong><br><code>setState</code>调用后，React会执行一个事务（Transaction），在这个事务中，React将新state放进一个队列中，当事务完成后，React就会刷新队列，然后启动另一个事务，这个事务包括执行 <code>shouldComponentUpdate</code> 方法来判断是否重新渲染，如果是，React就会进行state合并（<code>state merge</code>）,生成新的state和props；如果不是，React仍然会更新<code>this.state</code>，只不过不会再<code>render</code>了。</p>
+<p>开发人员对<code>setState</code>感到奇怪的原因可能就是按照上述写法并不能产生预期效果，但幸运的是我们改动一下就可以实现上述累加效果：<br>这归功于<code>setState</code>可以接受函数作为参数：</p>
+<blockquote>
+<p><code>setState(updater, [callback])</code></p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">...</div><div class="line">state = &#123;</div><div class="line">	<span class="attr">score</span>: <span class="number">0</span></div><div class="line">&#125;</div><div class="line">componentDidMount() &#123;</div><div class="line">    <span class="keyword">this</span>.setState( <span class="function">(<span class="params">prevState</span>) =&gt;</span> (&#123;<span class="attr">score</span> : prevState.score + <span class="number">1</span>&#125;) )</div><div class="line">    <span class="keyword">this</span>.setState( <span class="function">(<span class="params">prevState</span>) =&gt;</span> (&#123;<span class="attr">score</span> : prevState.score + <span class="number">1</span>&#125;) )</div><div class="line">    <span class="keyword">this</span>.setState( <span class="function">(<span class="params">prevState</span>) =&gt;</span> (&#123;<span class="attr">score</span> : prevState.score + <span class="number">1</span>&#125;) )</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个<code>updater</code>可以为函数，该函数接受该组件<strong>前一刻</strong>的 state 以及<strong>当前</strong>的 props 作为参数，计算和返回下一刻的 state。</p>
+<p>你会发现达到增加三次的目的了: <a href="http://jsbin.com/nazazo/edit?html,js,console,output" target="_blank" rel="external">在Jsbin上试试看</a></p>
+<p>这是因为React会把<code>setState</code>里传进去的函数放在一个任务队列里，React 会依次调用队列中的函数，传递给它们<strong>前一刻</strong>的 state。</p>
+<p><strong>另外</strong>，不知道你在<a href="http://jsbin.com/nazazo/edit?html,js,console,output" target="_blank" rel="external">jsbin</a>上的代码上注意到没有，调用<code>setState</code>后<code>console.log(this.state.score)</code>输出仍然为0，也就是<code>this.state</code>并未改变，并且只<code>render</code>了一次。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>学习一个框架或者工具，我觉得应该了解以下几点：</p>
+<ol>
+<li>它是什么？能做什么？</li>
+<li>它存在的理由是什么？解决了什么样的问题、满足了什么样的需求？</li>
+<li>它的适用场景是什么？优缺点是什么？</li>
+<li>它怎么用？最佳实践是什么？</li>
+<li>它的原理是什么？ </li>
+<li>…</li>
+</ol>
+<p>通过对React一些原理的简单了解，就懂得了React为什么这么快速的原因之一，也会在问题出现时知道错在什么地方，知道合理的解决方案。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/React/" rel="tag"># React</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/24/使用React技术栈的一些收获/" rel="next" title="使用React技术栈的一些收获">
+                <i class="fa fa-chevron-left"></i> 使用React技术栈的一些收获
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+	
+    <div class="post-spread">
+      
+        
+<script>
+  with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    <!---->
+	<div id="uyan_frame" style="padding-top:50px;"></div>
+
+	<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2131218"></script>
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="mofan" />
+          <p class="site-author-name" itemprop="name">mofan</p>
+          <p class="site-description motion-element" itemprop="description">哈哈哈</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+          <div class="cc-license motion-element" itemprop="license">
+            <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank">
+              <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+            </a>
+          </div>
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">2.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#React合成事件系统"><span class="nav-number">3.</span> <span class="nav-text">React合成事件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#组件的生命周期（以父子组件为例）"><span class="nav-number">4.</span> <span class="nav-text">组件的生命周期（以父子组件为例）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setState并不奇怪"><span class="nav-number">5.</span> <span class="nav-text">setState并不奇怪</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+		
+    </main>
+	
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">mofan</span>
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<span id="busuanzi_container_site_pv">
+    总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+
+<span id="showDays"></span><br>
+
+<script>
+var birthDay = new Date("12/5/2016");
+var now = new Date();
+var duration = now.getTime() - birthDay.getTime();
+var total= Math.floor(duration / (1000 * 60 * 60 * 24));
+document.getElementById("showDays").innerHTML = "&nbsp;&nbsp;已运行 "+total+" 天";
+</script>
+
+
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+  
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+
+</body>
+</html>
