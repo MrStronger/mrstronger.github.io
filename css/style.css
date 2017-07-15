@@ -233,6 +233,7 @@ body {
   text-align: left;
   position: relative;
   background-color: #fff;
+  padding: 20px 0;
 }
 #header .site-name h1 {
   padding: 0;
@@ -366,11 +367,9 @@ body {
   padding: 7px 11px 7px 35px;
   line-height: 16px;
   width: 100%;
-  border-radius: 15px;
+  border-radius: 2px;
   background: #fff;
-  -webkit-box-shadow: 1px 2px 3px #adc2d7;
-  box-shadow: 1px 2px 3px #adc2d7;
-  border: 1px solid #adc2d7;
+  border: 1px solid #e4e4e4;
 }
 #result-wrap {
   position: absolute;
