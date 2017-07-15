@@ -190,6 +190,7 @@ body {
   background: #fff;
 }
 .layout-g {
+  padding-top: 100px;
   letter-spacing: -0.31em;
   *letter-spacing: normal;
   word-spacing: -0.43em;
