@@ -275,7 +275,7 @@ body {
 }
 #nav-menu a:hover,
 #nav-menu a.current {
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid #40759b;
 }
 /* sidebar */
 #sidebar {
@@ -287,9 +287,7 @@ body {
   margin-bottom: 20px;
   padding: 10px 20px 20px 20px;
   border-radius: 4px;
-  -webkit-box-shadow: 1px 2px 3px #adc2d7;
-  box-shadow: 1px 2px 3px #adc2d7;
-  border: 1px solid #adc2d7;
+  border: 1px solid #e4e4e4;
   background: #fff;
 }
 #sidebar .widget a {
@@ -477,9 +475,7 @@ body {
   padding: 25px;
   background: #fff;
   border-radius: 4px;
-  -webkit-box-shadow: 1px 2px 3px #adc2d7;
-  box-shadow: 1px 2px 3px #adc2d7;
-  border: 1px solid #adc2d7;
+  border: 1px solid #e4e4e4;
   margin-bottom: 20px;
 }
 .post .post-title {
@@ -1171,9 +1167,7 @@ table td {
   #search-form input {
     color: #fff;
     background: transparent;
-    border: 1px solid #e2eaf1;
-    -webkit-box-shadow: 0 0 10px #adc2d7 inset;
-    box-shadow: 0 0 10px #adc2d7 inset;
+    border: 1px solid #e4e4e4;
   }
   #search-form input:-ms-input-placeholder {
     color: #fff;
