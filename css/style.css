@@ -252,8 +252,7 @@ body {
 #logo {
   font: bold 42px/1.2 "宋体";
   white-space: nowrap;
-  color: #fff;
-  text-shadow: 1px 3px 6px #113f6e;
+  color: #000;
 }
 #nav-menu {
   margin: 20px 0;
