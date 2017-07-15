@@ -276,8 +276,6 @@ body {
 #nav-menu a:hover,
 #nav-menu a.current {
   border-bottom: 1px solid #fff;
-  -webkit-box-shadow: 0 0 10px #adc2d7 inset;
-  box-shadow: 0 0 10px #adc2d7 inset;
 }
 /* sidebar */
 #sidebar {
