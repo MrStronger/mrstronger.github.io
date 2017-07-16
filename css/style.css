@@ -237,6 +237,7 @@ body {
   border-bottom: 1px solid #e4e4e4;
   background-color: #fff;
   padding: 20px 100px 20px 100px;
+  z-index: 1010;
 }
 #header .site-name {
   float: left;
