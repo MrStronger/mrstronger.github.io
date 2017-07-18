@@ -49,7 +49,7 @@ totop.onclick = function() {
   var holdOn = setInterval(function(){
       if(opacity>0.95)
         sign = true;
-      else if(opacity<0.05)
+      else if(opacity<0.25)
         sign = false
       sign ? opacity -= 0.0266667 : opacity += 0.0266667;
       name.style.opacity = opacity;
