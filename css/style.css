@@ -262,6 +262,12 @@ body {
   white-space: nowrap;
   color: #000;
 }
+.logoImg {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #c8c8c8;
+  border-radius: 16px;
+}
 #nav-menu {
   padding: 0;
   float: right;
