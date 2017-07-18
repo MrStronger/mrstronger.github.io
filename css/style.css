@@ -240,6 +240,9 @@ body {
   padding: 20px 100px 20px 100px;
   z-index: 1010;
 }
+#header span.hidden {
+  font-size: 40px;
+}
 #header .site-name {
   float: left;
 }
@@ -263,10 +266,10 @@ body {
   color: #000;
 }
 .logoImg {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
   border: 1px solid #c8c8c8;
-  border-radius: 16px;
+  border-radius: 24px;
 }
 #nav-menu {
   padding: 0;
