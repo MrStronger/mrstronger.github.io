@@ -240,7 +240,7 @@ body {
   padding: 20px 100px 20px 100px;
   z-index: 1010;
 }
-#header span.hidden {
+#header span#hidden {
   font-size: 40px;
   vertical-align: middle;
   font-weight: 200;

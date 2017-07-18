@@ -41,3 +41,17 @@ totop.onclick = function() {
   //totop.classList.add('launch');
   return false;
 };
+
+(function(){
+  var name = document.getElementById('hidden');
+  var opacity = 1;
+  var sign = true;
+  var holdOn = setInterval(function(){
+      if(opacity>0.95)
+        sign = true;
+      else if(opacity<0.05)
+        sign = false
+      sign ? opacity -= 0.0266667 : opacity += 0.0266667;
+      name.style.opacity = opacity;
+  },100)
+})();
