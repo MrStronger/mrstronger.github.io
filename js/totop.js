@@ -54,6 +54,6 @@ totop.onclick = function() {
         sign = false
       sign ? opacity -= 0.0266667 : opacity += 0.0266667;
       name.style.opacity = opacity;
-      if(opacity>0.9) name.style.textShadow = '0px 0px ' + opacity*5 + 'px #fff';
+      name.style.textShadow = '0px 0px ' + opacity*5 + 'px #fff';
   },100)
 })();
