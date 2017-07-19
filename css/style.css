@@ -1079,6 +1079,9 @@ body {
   margin-right: 0.2em;
 }
 /* toc*/
+#toc {
+  top: 100px;
+}
 #toc li {
   font-weight: bold;
 }
