@@ -47,13 +47,13 @@ totop.onclick = function() {
   var opacity = 1;
   var sign = true;
   var holdOn = setInterval(function(){
-      if(opacity>0.90){
+      if(opacity>0.98){
         sign = true;
-        name.style.textShadow = '0px 0px ' + opacity*5 + 'px #fff'
+        
       } else if(opacity<0.45)
         sign = false
       sign ? opacity -= 0.0266667 : opacity += 0.0266667;
       name.style.opacity = opacity;
-      
+      if(opacity>0.9) name.style.textShadow = '0px 0px ' + opacity*5 + 'px #fff';
   },100)
 })();
