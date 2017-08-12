@@ -279,7 +279,10 @@ body {
 }
 #nav-menu {
   padding: 0;
-  float: right;
+  position: absolute;
+  right: 40px;
+  background: #2a2929;
+  opacity: 0.95;
   line-height: 55px;
 }
 #nav-menu a {
