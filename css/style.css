@@ -277,13 +277,6 @@ body {
   border-radius: 24px;
   vertical-align: middle;
 }
-@media (max-width: 768px) {
-  .logoImg,
-  span#hidden {
-    display: block;
-    margin: 5px auto;
-  }
-}
 #nav-menu {
   padding: 0;
   position: absolute;
@@ -1219,6 +1212,11 @@ table td {
     line-height: 27px;
     height: 27px;
     font-size: 13px;
+  }
+  .logoImg,
+  span#hidden {
+    display: block;
+    margin: 5px auto;
   }
   .site-name {
     margin-bottom: 10px;
