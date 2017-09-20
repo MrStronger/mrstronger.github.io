@@ -1172,6 +1172,9 @@ table td {
   .layout-r {
     width: 100%;
   }
+  .layout-g {
+    padding-top: 200px;
+  }
   #toc {
     display: none;
   }
@@ -1203,9 +1206,13 @@ table td {
   #search-form input::-webkit-input-placeholder {
     color: #fff;
   }
+  #header {
+    padding: 10px;
+  }
   #nav-menu {
-    position: relative;
+    position: initial;
     text-align: center;
+    margin: 0 auto;
   }
   #nav-menu a {
     padding: 0 15px;
@@ -1214,8 +1221,9 @@ table td {
     font-size: 13px;
   }
   .site-name {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     text-align: center;
+    float: none !important;
   }
   .content_container {
     padding-right: 0;
