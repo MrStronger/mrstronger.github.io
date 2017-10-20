@@ -16,7 +16,7 @@ window.onscroll = function() {
   var logoImg = document.getElementsByClassName("logoImg")[0]
   var name = document.getElementById('hidden')
 
-  var logoImgLeft = window.getComputedStyle(logoImg).marginLeft
+  var logoImgLeft = parseInt(window.getComputedStyle(logoImg).marginLeft)
   console.log(logoImgLeft)
   if (document.body.clientWidth < 500 && logoImgLeft > 10) {
     logoImg.style.transform = 'translate(' + -scroll + ',0)'
