@@ -15,6 +15,7 @@ window.onscroll = function() {
   var scroll = document.documentElement.scrollTop || document.body.scrollTop || window.scrollY;
   var logoImg = document.getElementsByClassName("logoImg")
   var name = document.getElementById('hidden')
+  console.log(logoImg.style.marginLeft)
   if (logoImg.style.marginLeft > 10) {
     logoImg.style.marginLeft = scroll
   }
