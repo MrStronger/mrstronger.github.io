@@ -13,11 +13,11 @@ function removeClass(obj, cls) {
 window.onscroll = function() {
   var totop = document.getElementById('totop');
   var scroll = document.documentElement.scrollTop || document.body.scrollTop || window.scrollY;
-  var logoImg = document.getElementsByClassName("logoImg")
+  var logoImg = document.getElementsByClassName("logoImg")[0]
   var name = document.getElementById('hidden')
   console.log(logoImg.style.marginLeft)
-  if (logoImg.style.marginLeft > 10) {
-    logoImg.style.marginLeft = scroll
+  if (document.body.clientWidth < 500 && logoImg.offsetLeft > 10) {
+    logoImg.style.transform = 'translate(' + -scroll + ',0)'
   }
   if (scroll >= 300) {
     addClass(totop,"show");
