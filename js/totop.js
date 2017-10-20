@@ -19,7 +19,7 @@ window.onscroll = function() {
   var logoImgLeft = parseInt(window.getComputedStyle(logoImg).marginLeft)
   console.log(logoImgLeft)
   if (document.body.clientWidth < 500 && logoImgLeft > 10) {
-    logoImg.style.transform = 'translate(' + -scroll + ',0)'
+    logoImg.style.marginLeft = document.body.clientWidth/2 -24 - scroll
   }
   if (scroll >= 300) {
     addClass(totop,"show");
