@@ -20,13 +20,13 @@ window.onscroll = function() {
   var clientWidth = document.body.clientWidth
  
   if (clientWidth < 500 && scroll > 10) {
-    logoImg.style.transform = 'translate(0px,30px)'
-    name.style.transform = 'translate(0,-60px)'
+    logoImg.style.transform = 'translate(' + -(clientWidth/2 - 35) + 'px,0)'
+    name.style.transform = 'translate(' + -(clientWidth/2 - 95) + 'px,' + '-47px)'
     name.style.fontSize = '30px'
     list.style.transform = 'translate(0px,' + '-200px)'
     list.style.transition = 'opacity .5s'
     list.style.opacity = 0
-    header.style.height = '70px'
+    header.style.height = '80px'
   } else if (clientWidth < 500 && scroll < 10) {
     logoImg.style.transform = 'translate(0,0)'
     name.style.transform = 'translate(0,0)'
