@@ -15,11 +15,27 @@ window.onscroll = function() {
   var scroll = document.documentElement.scrollTop || document.body.scrollTop || window.scrollY;
   var logoImg = document.getElementsByClassName("logoImg")[0]
   var name = document.getElementById('hidden')
-
-  var logoImgLeft = document.body.clientWidth/2 - 34
-  console.log(logoImgLeft)
-  if (document.body.clientWidth < 500 && logoImgLeft > 0) {
-    logoImg.style.transform = 'translate(' + -scroll + 'px,0)'
+  var list = document.getElementById("nav-menu")
+  var header = document.getElementById("header")
+  var clientWidth = document.body.clientWidth
+ 
+  if (clientWidth < 500 && scroll > 10) {
+    logoImg.style.transform = 'translate(0px,30px)'
+    name.style.transform = 'translate(0,-60px)'
+    name.style.fontSize = '30px'
+    list.style.transform = 'translate(0px,' + '-200px)'
+    list.style.transition = 'opacity .5s'
+    list.style.opacity = 0
+    header.style.height = '70px'
+  } else if (clientWidth < 500 && scroll < 10) {
+    logoImg.style.transform = 'translate(0,0)'
+    name.style.transform = 'translate(0,0)'
+    header.style.height = '194px'
+    name.style.fontSize = '40px'
+    list.style.transform = 'translate(0,0)'
+    list.style.transition = 'opacity 2s'
+    list.style.opacity = 1
+    
   }
   if (scroll >= 300) {
     addClass(totop,"show");

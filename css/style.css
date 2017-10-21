@@ -239,6 +239,7 @@ body {
   background-color: #2a2929;
   padding: 20px 100px 20px 100px;
   z-index: 1010;
+  transition: 0.5s;
 }
 #header span#hidden {
   font-size: 40px;
@@ -284,6 +285,7 @@ body {
   background: #2a2929;
   opacity: 0.95;
   line-height: 55px;
+  transition: 1s;
 }
 #nav-menu a {
   display: inline-block;
@@ -1215,6 +1217,7 @@ table td {
   }
   .logoImg,
   span#hidden {
+    transition: 1s;
     display: block;
     margin: 5px auto;
   }
