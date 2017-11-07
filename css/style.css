@@ -243,8 +243,8 @@ body {
 }
 #header span#hidden {
   font-size: 40px;
+  font-weight: 500;
   vertical-align: middle;
-  font-weight: 200;
   color: #fff;
   font-family: Arial;
 }
