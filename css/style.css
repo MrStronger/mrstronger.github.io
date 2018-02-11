@@ -499,7 +499,7 @@ body {
   border-bottom: 1px solid #d8e2eb;
   padding-bottom: 10px;
   font-weight: bold;
-  font-size: 22px;
+  font-size: 32px;
   line-height: 1.1;
 }
 .post .post-title a {
@@ -581,7 +581,7 @@ body {
 }
 .post .post-content {
   clear: left;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.77;
   color: #333;
   padding-top: 15px;
@@ -590,19 +590,29 @@ body {
   word-break: normal;
 }
 .post .post-content h2 {
-  font-size: 18px;
+  font-size: 28px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 .post .post-content h3 {
-  font-size: 16px;
+  font-size: 26px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 .post .post-content h4 {
-  font-size: 14px;
+  font-size: 24px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 .post .post-content h5 {
-  font-size: 13px;
+  font-size: 22px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 .post .post-content h6 {
-  font-size: 12px;
+  font-size: 20px;
+  padding-top: 4px;
+  padding-bottom: 4px;
 }
 .post .post-content p {
   margin: 0 0 1.234em;
@@ -642,7 +652,7 @@ body {
   display: block;
 }
 .post .post-content hr {
-  margin: 2.4em auto;
+  margin: 0 auto 0.4em;
   border: none;
   border-top: 1px solid #d8e2eb;
   position: relative;
