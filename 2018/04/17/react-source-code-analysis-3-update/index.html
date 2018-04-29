@@ -2,7 +2,7 @@
 <p>React 是如何更新组件的? </p>
 <p>React 是如何对比出页面变化最小的部分?</p>
 <p>这篇文章会为你解答这些问题.</p>
-<h3 id="在这之前"><a href="#在这之前" class="headerlink" title="在这之前"></a>在这之前</h3><p>你已经了解了React (15-stable版本)内部的一些基本概念, 包括不同类型的组件实例、mount过程、事务、批量更新的大致过程(还没有? 不用担心, 为你准备好了<a href="http://realtcg.com/2018/02/11/%E7%AA%A5%E6%8E%A2React-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%B8%80">从源码看组件初始渲染</a>-%E8%B0%83%E7%94%A8ReactDOM.render%E5%90%8E%E5%8F%91%E7%94%9F%E4%BA%86%E4%BB%80%E4%B9%88/)、<a href="http://realtcg.com/2018/03/17/%E7%AA%A5%E6%8E%A2React-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90(%E4%BA%8C">接着从源码看组件初始渲染</a>-%E7%BB%84%E4%BB%B6%E7%9A%84%E5%88%9D%E5%A7%8B%E6%B8%B2%E6%9F%93/);</p>
+<h3 id="在这之前"><a href="#在这之前" class="headerlink" title="在这之前"></a>在这之前</h3><p>你已经了解了React (15-stable版本)内部的一些基本概念, 包括不同类型的组件实例、mount过程、事务、批量更新的大致过程(还没有? 不用担心, 为你准备好了<a href="http://realtcg.com/2018/02/11/react-source-code-analysis-1-after-ReactDOM.render/">从源码看组件初始渲染</a>、<a href="http://realtcg.com/2018/03/17/react-source-code-analysis-2-initial-render/">接着从源码看组件初始渲染</a>;</p>
 <p>准备一个<a href="https://github.com/MrStronger/react-experiment" target="_blank" rel="noopener">demo</a>, 调试源码, 以便更好理解;</p>
 <p>Keep calm and make a big deal !</p>
 <h2 id="React-是如何更新组件的"><a href="#React-是如何更新组件的" class="headerlink" title="React 是如何更新组件的?"></a>React 是如何更新组件的?</h2><h5 id="TL-DR"><a href="#TL-DR" class="headerlink" title="TL;DR"></a>TL;DR</h5><ul>
