@@ -1,0 +1,108 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="莫凡的个人博客"><title>全面了解HTTP | 莫凡</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css"></head><body><div class="body_container"><div id="header"><div class="site-name"><a id="logo" href="/."><img src="http://ot6vbgl2y.bkt.clouddn.com/18-2-12/7859845.jpg" class="logoImg"><span id="hidden">全面了解HTTP</span></a></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">全面了解HTTP</h1><div class="post-meta"><a href="/2018/05/02/a-comprehensive-understanding-of-HTTP/#comments" class="comment-count"></a><p><span class="date">May 02, 2018</span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>点击</i></i></span></p></div><div class="post-content"><blockquote>
+<p><strong>读之前请注意:</strong></p>
+<p>这篇文章是我在读完 David Gourley 等人所著的《HTTP权威指南》后写的读书笔记, 文章内容包括我从这本书和网上学到的知识. 其中很大概率会有错误、片面、过时的内容, 仅供参考. 建议读者自己去读这本书或者直接阅读RFC 中 HTTP 相关标准.</p>
+</blockquote>
+<p>这篇文章包括 HTTP 协议本身的介绍、 HTTP 的应用、TCP/IP 协议族的介绍以及穿插在各个知识点的扩展.</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><h3 id="HTTP-概述"><a href="#HTTP-概述" class="headerlink" title="HTTP 概述"></a>HTTP 概述</h3><p>1989年3月12日, Tim Berners-Lee 发表了一篇论文《Information Management: A Proposal》, 提出一个基于互联网的超文本系统, 可以让信息在 CERN 各种设备上的显示、查找、共享更加方便, world wide web也被首次提及. 1990年10月前, Tim Berners-Lee 相继定义了三种 web 基础技术的初始版本: 命名方案(URI)、通信协议(HTTP)和表示信息的超文本标记语言HTML, 并写出了世界上第一个浏览器和web站点. 后来, 这三种基础技术经W3C(Tim Berners-Lee 创建) 和 IETF 组织标准化, 发布了一系列RFC, HTTP 版本也从 HTTP 0.9 到现在的 HTTP 2.</p>
+<p>如今, HTTP 广泛用于客户端和服务器端之间多媒体信息的传输, 是一种应用层协议, 基于TCP/IP 协议族. 简化过程为: </p>
+<ol>
+<li>客户端发起一个HTTP请求, 内容为 HTTP 请求报文, 报文分为首部和主体, 首部会使用统一标识符 URL 表明想要的资源, 使用方法来表明动作, 使用首部来表明报文的各种配置信息等; 主体是要发送的数据;</li>
+<li>服务端接收到请求后会解析, 查找到资源后使用HTTP报文返回, 报文也包括了首部和主体, 分别用于指定响应的配置信息和具体的资源. 然后服务器关闭连接, 响应结束.</li>
+</ol>
+<p>这个过程称作一个HTTP事务.</p>
+<p>上面的过程只是简化版, 实际中, 从客户端到源服务器的请求可能会更加复杂——首先, 在发送HTTP请求之前, 客户端会先使用本地DNS缓存或者远程DNS服务器将URL解析为IP地址, 然后用IP地址和端口号和服务器建立TCP/IP连接, 有时还会进行SSL握手建立加密的连接后才会发送HTTP请求. 接着可能会经过各种代理、网关、隧道等, 有时甚至直接从CDN中的某个就近缓存服务器返回了请求, 没有到达源服务器. 而服务端接受到请求后, 除了接受请求并解析、返回本地资源外, 也可能会做监视连接、客户端认证、执行程序生成动态内容、重定向、记录日志等…</p>
+<p>日益增长的需求和不断变化的应用, 使 HTTP 逐渐变得复杂起来, HTTP 标准的版本也因此不断演变. HTTP,  就像其他web技术一样, 先有需求和应用, 才有下一个标准. 实践总是走在理论标准前面.</p>
+<blockquote>
+<p>代理位于客户端和源服务器之间, 在客户端和源服务器交流之前处理请求或响应, 用处很广泛, 将在下文讨论; 网关用于转换协议, 比如你发了一个HTTP请求一个需要用FTP协议请求的文件, HTTP/FTP网关就会转换协议; 隧道会在连接的两端之间建立一条通道, 在这条通道上用HTTP连接承载其他数据(如SSL流量), 经过代理时会直接转发, 这样的话就可以让客户端与服务器直接进行TLS(SSL)握手来建立HTTPS连接.</p>
+</blockquote>
+<p>有一些细节需要讨论:</p>
+<ul>
+<li><p>为什么要创建一个新的协议而不是继续使用原来的协议?</p>
+<p>Tim Berners-Lee 在设计HTTP之初提到过, 为了更好地管理信息(基于HTML), 新有的协议要基于原有协议并且更有利于信息管理(能够传送HTML):</p>
+<p><img src="http://ot6vbgl2y.bkt.clouddn.com/18-4-30/96581419.jpg" alt="Tim Berners-Lee 在1991年发表"></p>
+</li>
+<li><p>为什么HTTP是一个基于TCP/IP的应用层协议? </p>
+<p>TCP/IP是全世界的计算机和网络设备常用的基础协议集, 位于OSI协议栈的传输层隐藏了不同设备的特点和弱点, 提供可靠的通信, 基于TCP/IP, 无需担心底层影响, 保证了数据的稳定传输. 另一方面, 应用层协议方便应用程序发起连接而不需要关心底层实现.</p>
+<p>​</p>
+</li>
+</ul>
+<h3 id="URL与资源"><a href="#URL与资源" class="headerlink" title="URL与资源"></a>URL与资源</h3><p>web 及HTTP 诞生之前, 如果想要访问服务器上的某个文件, 你需要使用FTP协议连接到服务器再下载到本地浏览. 后来, 在万维网和HTTP诞生之际, 为了在不同环境、不同系统下(可移植)能够通用地、方便地访问服务器中的某个资源,  Tim Berners-Lee 配套地定义了Universal Resource Identifier 统一资源标识符URI来唯一指定某个资源, 这样以来, 使用HTTP协议发送请求就可以方便的指定资源. URI 包括以地址为标识符的URL(Locators)方案和以名字为标识符的URN(Names)方案. 早期的</p>
+<ul>
+<li>URL 通过描述资源的位置来标识资源, 但不会反映资源内容的变化, 且一旦某个资源被移动, 这个URL 也就失效了;</li>
+<li>URN 通过资源的名称来标识资源, 与资源所处的位置无关, 因此就算资源被移动仍能找到(尚未实现).</li>
+</ul>
+<p>URL 结构如下(<a href="https://code.tutsplus.com/tutorials/http-the-protocol-every-web-developer-must-know-part-1--net-31177" target="_blank" rel="noopener">图片来源</a>):</p>
+<p><img src="http://ot6vbgl2y.bkt.clouddn.com/18-5-1/58551582.jpg" alt=""></p>
+<p>协议、域名和端口指明了资源所在空间, 路径指明了具体位置, 问好及后面的query组成了查询组件, 可以服务端程序传递查询参数. URL 会将一些特殊字符转义以避开安全问题, 如空格会被转义成 “%20”, 汉字会转成 ASCII 码等.</p>
+<p>URL 末尾还有一个片段组件, 以#开头, 用来表示某个文档中的某个部分. 值得一提的是, 改变片段值并不会触发页面刷新, 另外HTML5也定义了相关标准 API 来允许开发者操作片段, 因此常作为页面路由的基础实现.</p>
+<h3 id="这一切是怎么来的"><a href="#这一切是怎么来的" class="headerlink" title="这一切是怎么来的?"></a>这一切是怎么来的?</h3><h4 id="The-Elephant-in-the-room"><a href="#The-Elephant-in-the-room" class="headerlink" title="The Elephant in the room"></a>The Elephant in the room</h4><p>HTTP 和 URL 有各种特性, 如客户端-服务端模式、无状态连接、缓存、统一接口等, 这些特性使得 HTTP和 URL 在如今日益复杂的分布式网络系统中出色的完成了工作, 但这里有一个深层的问题非常值得探讨: Why? 为什么会有这些特性(使得Web取得了巨大的成功)? 为什么要这样设计? 当然是有产生背景的…</p>
+<blockquote>
+<p>1996年左右, HTTP/1.1专家组的负责人 Roy Fielding 和他的同事们在HTTP/1.1协议的设计工作中，对于Web之所以取得巨大成功，在技术架构方面的因素做了一番深入的总结。<strong>Fielding将这些总结纳入到了一套理论框架之中，然后使用这套理论框架中的指导原则，来指导HTTP/1.1协议的设计方向。</strong></p>
+<p>1999年6月, IETF 正式发布了 HTTP 1.1 (RFC 2626\RFC 2617). HTTP/1.1协议设计的极为成功，以至于发布之后整整10年时间里，都没有多少人认为有修订的必要。</p>
+<p>Fielding在完成HTTP/1.1协议的设计工作之后第二年（2000年）, 在他的博士学位论文《Architectural Styles and the Design of Network-based Software Architectures》中，<strong>Fielding更为系统、严谨地阐述了这套理论框架，并且使用这套理论框架推导出了一种新的架构风格，他为这种架构风格取了一个令人轻松愉快的名字“REST”——Representational State Transfer（表述性状态转移）的缩写。</strong></p>
+<p>​                                                            ——<a href="http://www.infoq.com/cn/articles/understanding-restful-style#anch101044" target="_blank" rel="noopener">《理解本真的REST架构风格》</a></p>
+</blockquote>
+<h4 id="REST-—-Web应用架构背后的设计思想"><a href="#REST-—-Web应用架构背后的设计思想" class="headerlink" title="REST — Web应用架构背后的设计思想"></a>REST — Web应用架构背后的设计思想</h4><p>REST 是一种分布式系统软件架构风格, 是为运行在互联网环境的分布式超媒体系统量身定制的。REST 架构应用在了 URL 标准 和 HTTP 1.1 协议上, 它是所有Web应用都应该遵守的架构设计指导原则。</p>
+<p>对于 Web 这样一个大型分布式超文本系统有几个主要需求: 客户-服务器模式、无状态、缓存、统一接口、分层系统等. 对于这几个需求, REST是这么设计的:</p>
+<p><img src="http://ot6vbgl2y.bkt.clouddn.com/18-5-2/76273898.jpg" alt=""></p>
+<p>而使用 HTTP 1.1协议的Web系统架构通常如下:</p>
+<p><img src="http://ot6vbgl2y.bkt.clouddn.com/18-5-2/99017610.jpg" alt=""></p>
+<p>左边是客户端, 中间是各种代理、缓存、网关等, 右边是服务端.</p>
+<p>想必你已经明白了为什么 HTTP 1.1要这么设计, 为什么HTTP 1.1有这样那样的特性, 这是因为HTTP/1.1协议是一种REST架构风格的架构实例.</p>
+<p>REST 不仅仅对 HTTP1.1协议的设计起到指导作用, 还对早先的 URL 设计提出了一些建议, 其中突出的是<strong>将URL语义化:</strong></p>
+<p><a href="http://www.infoq.com/cn/minibooks/web-based-apps-archit-design" target="_blank" rel="noopener">图片截图自《架构风格与基于网络的软件架构设计》中文版, 译者: 李琨</a></p>
+<p><img src="http://ot6vbgl2y.bkt.clouddn.com/18-5-2/55587304.jpg" alt=""></p>
+<p>REST 5个核心概念: </p>
+<ul>
+<li>资源——服务器上的超媒体, 资源是一种映射</li>
+<li>资源的表述——资源的格式, HTML/JSON等</li>
+<li>状态转移——在客户端和服务器端之间转移（transfer）代表资源状态的表述</li>
+<li>统一接口——通过统一的接口来对资源执行各种操作, 对于每个资源执行HTTP定义的操作</li>
+<li>超文本驱动;</li>
+</ul>
+<p>REST风格的架构所具有的6个的主要特征：</p>
+<ul>
+<li>面向资源（Resource Oriented）</li>
+<li>可寻址（Addressability）</li>
+<li>连通性（Connectedness）——避免设计孤立的资源，除了设计资源本身，还需要设计资源之间的关联关系，并且通过超链接将资源关联起来。</li>
+<li>无状态（Statelessness）</li>
+<li>统一接口（Uniform Interface）</li>
+<li>超文本驱动（Hypertext Driven）</li>
+</ul>
+<p>REST 这些特性指引了 HTTP 1.1协议基于HTTP 1.0协议的扩展方向</p>
+<p>具体请参考<a href="http://www.infoq.com/cn/articles/understanding-restful-style#anch101044" target="_blank" rel="noopener">《理解本真的REST架构风格》</a></p>
+<h4 id="RESTful-API——REST-风格的接口"><a href="#RESTful-API——REST-风格的接口" class="headerlink" title="RESTful API——REST 风格的接口"></a>RESTful API——REST 风格的接口</h4><p>RESTful API 就是具有 REST 风格的接口, 它体现了 REST 面向资源、URL 语义化、统一接口等几大特性:</p>
+<ul>
+<li>多端统一接口</li>
+<li>使用 HTTP 动词让请求有意义</li>
+<li>提供语义化的URL;</li>
+<li>使用 HTTP 响应码来展示状态</li>
+<li>最好提供 JSON和XML 两种格式, JSON 优先</li>
+<li>将资源细粒度化</li>
+<li>考虑连通性</li>
+</ul>
+<p>具体实践请参考<a href="http://www.restapitutorial.com/或https://restfulapi.net/" target="_blank" rel="noopener">http://www.restapitutorial.com/或https://restfulapi.net/</a></p>
+<h3 id="HTTP-报文"><a href="#HTTP-报文" class="headerlink" title="HTTP 报文"></a>HTTP 报文</h3><h3 id="TCP-连接"><a href="#TCP-连接" class="headerlink" title="TCP 连接"></a>TCP 连接</h3><h3 id="web-服务器"><a href="#web-服务器" class="headerlink" title="web 服务器"></a>web 服务器</h3><h3 id="代理、缓存、CDN、DNS"><a href="#代理、缓存、CDN、DNS" class="headerlink" title="代理、缓存、CDN、DNS"></a>代理、缓存、CDN、DNS</h3><h3 id="HTTP认证"><a href="#HTTP认证" class="headerlink" title="HTTP认证"></a>HTTP认证</h3><h3 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP 2"></a>HTTP 2</h3><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><p><a href="https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol</a></p>
+<p><a href="https://en.wikipedia.org/wiki/URL" target="_blank" rel="noopener">https://en.wikipedia.org/wiki/URL</a></p>
+<p><a href="https://www.w3.org/Protocols/WhyHTTP.html" target="_blank" rel="noopener">https://www.w3.org/Protocols/WhyHTTP.html</a></p>
+<p><a href="https://webfoundation.org/about/vision/history-of-the-web/" target="_blank" rel="noopener">https://webfoundation.org/about/vision/history-of-the-web/</a></p>
+<p><a href="http://www.infoq.com/cn/articles/understanding-restful-style" target="_blank" rel="noopener">理解本真的REST架构风格</a></p>
+<p><a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/fielding_dissertation.pdf" target="_blank" rel="noopener">Architectural Styles and the Design of Network-based Software Architectures</a></p>
+</div><div class="tags"><a href="/tags/HTTP/">HTTP</a></div><div class="post-share"></div><div class="post-nav"><a href="/2018/04/17/react-source-code-analysis-3-update/" class="next">React源码分析(三)-全面剖析组件更新机制</a></div><div id="comments"><div id="container"></div></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="React"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">文章目录</i></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#正文"><span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-概述"><span class="toc-text">HTTP 概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#URL与资源"><span class="toc-text">URL与资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#这一切是怎么来的"><span class="toc-text">这一切是怎么来的?</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#The-Elephant-in-the-room"><span class="toc-text">The Elephant in the room</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#REST-—-Web应用架构背后的设计思想"><span class="toc-text">REST — Web应用架构背后的设计思想</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#RESTful-API——REST-风格的接口"><span class="toc-text">RESTful API——REST 风格的接口</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-报文"><span class="toc-text">HTTP 报文</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TCP-连接"><span class="toc-text">TCP 连接</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#web-服务器"><span class="toc-text">web 服务器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#代理、缓存、CDN、DNS"><span class="toc-text">代理、缓存、CDN、DNS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP认证"><span class="toc-text">HTTP认证</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP-2"><span class="toc-text">HTTP 2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#参考"><span class="toc-text">参考</span></a></li></ol></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/05/02/a-comprehensive-understanding-of-HTTP/">全面了解HTTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/17/react-source-code-analysis-3-update/">React源码分析(三)-全面剖析组件更新机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/17/react-source-code-analysis-2-initial-render/">React源码分析(二)-组件的初始渲染</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/11/react-source-code-analysis-1-after-ReactDOM.render/">React源码分析(一)-调用ReactDOM.render后发生了什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/21/认识node核心模块-网络编程/">认识node核心模块--网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/10/认识node核心模块-从Buffer、Stream到fs/">认识node核心模块--从Buffer、Stream到fs</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/03/认识node核心模块-深入EventEmitter/">认识node核心模块--深入EventEmitter</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/25/认识node核心模块-全局对象及Cluster/">认识node核心模块--全局对象及Cluster</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/14/node核心特性理解/">node核心特性理解</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/27/我对前端工程师这个职业的看法/">我对前端工程师这个职业的看法</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> 标签</i></div><div class="tagcloud"><a href="/tags/源码分析/" style="font-size: 15px;">源码分析</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/感想/" style="font-size: 15px;">感想</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/JavaScript函数/" style="font-size: 15px;">JavaScript函数</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/node/" style="font-size: 15px;">node</a> <a href="/tags/node基础/" style="font-size: 15px;">node基础</a> <a href="/tags/dva/" style="font-size: 15px;">dva</a> <a href="/tags/React架构/" style="font-size: 15px;">React架构</a> <a href="/tags/React基础/" style="font-size: 15px;">React基础</a> <a href="/tags/Redux/" style="font-size: 15px;">Redux</a> <a href="/tags/Redux-saga/" style="font-size: 15px;">Redux saga</a> <a href="/tags/事件循环机制/" style="font-size: 15px;">事件循环机制</a> <a href="/tags/前端工程师/" style="font-size: 15px;">前端工程师</a> <a href="/tags/职业规划/" style="font-size: 15px;">职业规划</a> <a href="/tags/JavaScript对象/" style="font-size: 15px;">JavaScript对象</a> <a href="/tags/实习/" style="font-size: 15px;">实习</a> <a href="/tags/面试题/" style="font-size: 15px;">面试题</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> 归档</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> 友情链接</i></div><ul></ul><a href="http://mofan_tcg.coding.me/" title="时光笔记" target="_blank">时光笔记</a><ul></ul><a href="http://realtcg.com/Precious-Memories/" title="React小相册" target="_blank">React小相册</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p>你的梦想是这个世界上最伟大的事情</p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次</p><p><span> Copyright &copy;<a href="/." rel="nofollow">mofan.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/MrStronger/hexo-theme-Mofan"> Mofan.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?3f3a5a8fd2b4cc3b3813fd00426fa25d";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script><script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script><script>var gitment = new Gitment({
+  id: '全面了解HTTP', // 可选。默认为 location.href
+  owner: 'MrStronger',
+  repo: 'blogcomment',
+  oauth: {
+    client_id: '0a99d84bb46f7cda7fce',
+    client_secret: 'b3915ea2a1e5364a698ec8335e34092ad6bc42d0',
+  },
+})
+gitment.render('container')
+</script></body></html>
