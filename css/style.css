@@ -263,7 +263,7 @@ body {
   text-shadow: 1px 2px 3px #113f6e;
   white-space: normal;
   word-wrap: break-word;
-  line-height: 26px;
+  line-height: 28px;
 }
 #logo {
   font: bold 42px/1.2 "宋体";
@@ -590,9 +590,10 @@ body {
   word-break: normal;
 }
 .post .post-content h2 {
-  font-size: 28px;
+  font-size: 30px;
   padding-top: 10px;
   padding-bottom: 10px;
+  border-bottom: 1px solid #bbb;
 }
 .post .post-content h3 {
   font-size: 26px;
@@ -712,13 +713,9 @@ body {
 .post-archive h2 {
   margin: 0 0 15px -51px;
   font-weight: bold;
-  font-size: 24px;
   letter-spacing: -1px;
   background: #d8e2eb;
-  height: 100px;
-  width: 100px;
   border-radius: 50%;
-  text-align: center;
   line-height: 100px;
   color: #9b4040;
 }
