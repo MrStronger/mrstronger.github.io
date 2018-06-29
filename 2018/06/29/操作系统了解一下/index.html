@@ -1,0 +1,136 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="莫凡的个人博客"><title>learning-about-the-operating-system | 莫凡</title><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"><link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css"></head><body><div class="body_container"><div id="header"><div class="site-name"><a id="logo" href="/."><img src="http://ot6vbgl2y.bkt.clouddn.com/18-2-12/7859845.jpg" class="logoImg"><span id="hidden">learning-about-the-operating-system</span></a></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">learning-about-the-operating-system</h1><div class="post-meta"><a href="/2018/06/29/操作系统了解一下/#comments" class="comment-count"></a><p><span class="date">Jun 29, 2018</span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>点击</i></i></span></p></div><div class="post-content"><p>最近在看操作系统, 感觉操作系统真的是软件工程界人类智慧的结晶了👏👏, 操作系统俨然是一套方法论, 看操作系统真的是能够开阔眼界, 对你的思考、设计、架构的能力都有很大提升(而不仅仅是搬砖:-)), 甚至感觉这东西应该在进入编程领域初就应该知道的, 是每个软件工程师最基本的技能, 操作系统非常值得反复学习、思考、钻研, 里面有很多设计方法、理念值得借鉴和思考. 无奈操作系统太复杂, 内容太多, 因此这篇文章只是用通俗的语言<strong>大致介绍了操作系统里面我感兴趣的主要部分, 包括操作系统概述、进程线程模型、内存管理、分布式系统以及Linux系统的实现.</strong> </p>
+<blockquote>
+<p><strong>读之前请注意</strong>!</p>
+<p>这篇文章是我读《操作系统概念》写的读书笔记, 文章内容包括我从这本书和网上学到的知识. 其中很大概率会有错误、片面、过时的内容, 仅供参考. 建议读者自己去读这本书或者直接阅读相关标准.</p>
+<p>最好了解过计算机系统组织结构</p>
+</blockquote>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>本篇文章用通俗的语言大致介绍了操作系统是什么, 主要的作用, 操作系统是如何管理硬件资源的. 具体介绍了它的进程、线程模型、CPU调度算法、进程同步机制、解决死锁的方法, 介绍了操作系统的内存分配、虚拟内存机制, 介绍了应用广泛的分布式系统的结构、设计, 最后介绍了优秀的操作系统实例 Linux 的实现.</p>
+<h3 id="操作系统概述"><a href="#操作系统概述" class="headerlink" title="操作系统概述"></a>操作系统概述</h3><h3 id="进程、线程模型"><a href="#进程、线程模型" class="headerlink" title="进程、线程模型"></a>进程、线程模型</h3><h4 id="同步机制"><a href="#同步机制" class="headerlink" title="同步机制"></a>同步机制</h4><p>同步的目的是要保证进程或线程间的有序协作. 很多进程/线程是协作进程/线程, 它们需要按照一定次序来执行才能完成任务.</p>
+<p>进程/线程并发执行带来的临界区问题:</p>
+<p>CPU 会并发执行多个进程, 这意味着CPU执行进程里的代码会随机的“跳来跳去”, 如果这些进程里同时操作共享数据(多个进程进入临界区, 产生竞争条件), 就会因为CPU并发执行的跳转次序不定而可能引起冲突, 理想上是当CPU执行一个进程的临界区代码时, 别的进程不能使用CPU, 且有次序地执行一个个进程. 解决冲突的方式是当CPU执行到一个进程里的操作共享数据的时候, 就避免执行其他进程, 也就是使进程互斥. 实现进程互斥有两种解决方案: 软件层面和硬件层面.</p>
+<blockquote>
+<p>进程互斥是一种特殊的同步, 同步的目的是要保证进程或线程间的有序协作, 包括实现进程互斥</p>
+</blockquote>
+<p><strong>软件——使用算法实现互斥:</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Peterson Algorithm</span></span><br><span class="line"><span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">    flag[i] = <span class="literal">true</span>; <span class="comment">// flag[i] 表示 i 进程想进入临界区</span></span><br><span class="line">    turn = j;<span class="comment">// 最终可以进入临界区的进程</span></span><br><span class="line">    <span class="keyword">while</span>(flag[j] &amp;&amp; turn == j);</span><br><span class="line">    <span class="comment">// 这里进入临界区</span></span><br><span class="line">    flag[i] = <span class="literal">false</span>; <span class="comment">// 退出临界区</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Peterson 算法适用于2个进程间的互斥, i 代表本进程, j 代表另一个; 在一个进程里这样写, 在另一个进程里把 j 和 i 对换即可实现互斥——当2个进程并发执行时, 就像之前说的, CPU执行进程里的代码会随机的“跳来跳去”. 对 i 进程, 当 j 进程想进入临界区(<code>flag[j] = true;</code>)并且 <code>turn == j</code>时, i 进程无限循环, 相当于等待, 而 j 进程由于<code>turn == j</code>不等于 i 因此不满足 j 进程的循环而进入临界区; 当 j 退出临界区, <code>flag[j] = false;</code>, 不满足 i 进程的<code>flag[j] &amp;&amp; turn == j</code>的循环条件,  因此进入临界区, 实现了互斥.</p>
+<p><strong>硬件——使用硬件指令:</strong></p>
+<p>在一个进程进入临界区前通过一些硬件指令或者原子操作(不可分割步骤的操作)防止这个进程被中断, 即屏蔽中断, 阻止CPU切换.</p>
+<p>以上软硬件层面的方法都各有缺点, 比如软件层面比较复杂, 需要考虑操作系统底层的特点, 对编程人员要求较高; 硬件层面限制了CPU并发能力, 不适用多处理器等. 它们都有CPU忙等待, 浪费了CPU时钟周期的缺点.</p>
+<p>临界区问题会导致进程优先级反转, 但这也是理所当然的事情.</p>
+<blockquote>
+<p>什么是进程优先级反转?</p>
+<p>限制CPU在一个进程上执行, 就不能被更高优先级进程抢占, 称为进程优先级反转</p>
+</blockquote>
+<p><strong>信号量——经典的进程同步机制</strong></p>
+<p>信号量是将上述软硬件层面方法的优缺点结合的对于同步问题的解决方案 .</p>
+<p>信号量是一个特殊变量, 可以在进程间传递, 因此进程可以直接使用.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 信号量是一个结构体, 包含一个当前资源的整型数量以及一个存储等待进程的队列</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Semaphore</span> &#123;</span></span><br><span class="line">    <span class="keyword">int</span> count;  </span><br><span class="line">    queueType <span class="built_in">queue</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>信号量有3种操作: </p>
+<ul>
+<li><p>初始化——初始化资源数目, 通常为1</p>
+</li>
+<li><p>P操作——表示本进程想要要进入临界区, 原子操作</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">P(S) &#123;</span><br><span class="line">    S.count --; <span class="comment">// 减少资源计数</span></span><br><span class="line">    <span class="keyword">if</span>(S.count &lt; <span class="number">0</span>) &#123; <span class="comment">// 没有可用的资源</span></span><br><span class="line">        <span class="comment">// 放到等待队列并设置改进程为等待状态</span></span><br><span class="line">        <span class="comment">// CPU调度程序重新调度另一个进程来执行</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>V操作——表示本进程要出临界区, 释放资源, 原子操作</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">V(S) &#123;</span><br><span class="line">    S.count ++;</span><br><span class="line">    <span class="keyword">if</span>(S.count &lt;= <span class="number">0</span>) &#123;  <span class="comment">// 等待队列不为空</span></span><br><span class="line">        <span class="comment">// 取等待队列的一个进程, 唤醒进程到就绪态</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>使用方法:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Semaphore S = <span class="keyword">new</span> Semaphore();</span><br><span class="line">S.P(S);</span><br><span class="line"><span class="comment">// 临界区</span></span><br><span class="line">S.V(S);</span><br></pre></td></tr></table></figure>
+<p>信号量是怎么解决同步问题的?</p>
+<p><img src="http://ot6vbgl2y.bkt.clouddn.com/18-6-23/72710049.jpg" alt=""></p>
+<p>假设, 有3个进程都有相同的临界区, 且被CPU并发执行, 资源数count初始为1. 当P1想进入临界区, 调用了P操作, count为0, 然后判断不小于0, 因此P1进入临界区, P1在临界区执行的时候, 可能在此时CPU跳到P2, 执行P2的P操作, count变为-1小于0, 加入到这个信号量的等待队列, 如果再跳到P3, count为-2小于0同样加入等待队列. 知道P1退出临界区, 执行V操作, count+1为-1小于等于0, 说明等待队列里有进程, 于是取进程P2并唤醒执行, P2因此进入临界区, P2退出临界区后同样取等待队列的P3, P3就进入了临界区. 实现了进程互斥、有序执行的同步机制.</p>
+<p>不仅如此, 因为信号量允许CPU在执行进程的临界区时跳转, 避免了一个进程不断循环的忙等待, CPU忙等待仅发生在P、V原子操作的时候, 因为这2个操作是不可分割(中断)的.</p>
+<p>不过, 信号量同样有问题, 由于它存在等待队列, 因此如果开发人员使用不当就很容易导致 一个等待进程 等待 另一个等待进程 的死锁情况以及饥饿(starvation)问题, 并且这些问题很难检测.</p>
+<p><strong>管程——高级语言层面、基于类的同步解决方案</strong></p>
+<p>信号量对编程人员要求较高, 管程则是一种高级的同步机制, 体现在了高级语言层面上的一种抽象操作. 管程就像一个类, 有共享数据以及对共享数据的各种操作:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">monitor name &#123;</span><br><span class="line">    <span class="comment">// 共享变量声明</span></span><br><span class="line">    integer i;</span><br><span class="line">    condition c;</span><br><span class="line">    <span class="comment">// 对共享数据的操作</span></span><br><span class="line">    <span class="function">procedure <span class="title">insert</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function">procedure <span class="title">remove</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>管程将共享数据封装了起来, 提供对共享数据操作的借口供进程调用, 换句话说, 进程只能通过管程中的操作来访问管程中的共享数据.</p>
+<p>管程生来具有进程互斥特性——管程确保一次只有一个进程能在管程内活动, 也就是编译器帮你实现好了. 如果需要解决一些特定同步问题也可以自定义<strong>额外的</strong>同步机制, 通过条件变量的 wait 和 signal 操作来阻塞、唤醒一个进程.</p>
+<p><strong>操作系统实例的解决方案</strong></p>
+<ul>
+<li>Windows XP: 内核线程采用自旋锁, 内核外线程利用调度对象采取互斥、信号量、时间、定时器等多种同步机制;</li>
+<li>Linux: 原子操作、自旋锁、读写锁、信号量、屏障等等.</li>
+</ul>
+<h4 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h4><p>考虑这种情况, 某个进程P1占用资源R1, 并且申请的资源R2被另一个进程P2占用, 那么P1进入等待状态, 如果P2进程申请被P1占用的资源R1, 那么P2也要进入等待状态, 两个进程相互等待, P1和P2将产生死锁.</p>
+<p>死锁的产生源于操作系统进程、线程模型和调度的特性, 这个“ 事故 ”是偶然发生的. 死锁产生有4个必要条件, 缺一不可:</p>
+<ul>
+<li>互斥——资源一次只能被一个进程使用</li>
+<li>占有并等待——一个进程占有至少一个资源, 并且等待另一个被占有的资源</li>
+<li>非抢占——资源一旦分配给进程只能等进程释放该资源, 不能中途抢占</li>
+<li>循环等待——P0等待P1, P1等待P2….Pn-1等待Pn, Pn等待P0, 形成等待环</li>
+</ul>
+<p><img src="http://ot6vbgl2y.bkt.clouddn.com/18-6-27/1916905.jpg" alt=""></p>
+<p>可以利用上图的资源分配图来分析死锁.</p>
+<p><strong>解决死锁</strong></p>
+<ul>
+<li>设计规则预防/避免死锁——死锁预防、死锁避免</li>
+<li>死锁发生时检测并恢复</li>
+</ul>
+<p><strong>死锁预防</strong></p>
+<p>死锁的产生需要4个条件缺一不可, 只要不满足其中一个条件即可, 然而前三个条件是由于操作系统的特性和各种机制引起的副作用, 且资源的种类、用途不同, 很难否定前三个条件, 因此可以从第四个条件下手.</p>
+<p>要使得一组进程之间不发生循环等待, 结合操作系统特性(前三个条件), 可以采用<strong>资源有序分配法:</strong></p>
+<p><strong>将系统所有资源编号, 进程在申请资源时, 只能按照递增的顺序申请, 即只能申请编号比自己已经申请过资源编号大的资源, 否则等待.</strong></p>
+<p>为什么这种方法可以避免死锁? 考虑一组进程, 它们申请的资源都按照资源有序分配法分配, 任一时刻, 这组进程里都存在一个进程拥有编号最大的那个资源, 那么这个进程就可以继续申请所有编号比自己还大的资源, 于是这个进程可以得到所有申请的资源, 使用后释放. n 个进程变为 n - 1 个进程. 接下来的进程同是如此, 所有进程就可以有序被分配资源而不会发生死锁.</p>
+<p><strong>死锁避免</strong></p>
+<p>操作系统事先可以得到进程申请资源和使用资源的额外信息, 通过这些信息去判断此次是给进程资源还是让进程等待, 从而避免可能发生的死锁.</p>
+<p>操作系统会根据信息尝试寻找一个<strong>安全序列</strong>, 如果找到, 系统就处于安全状态. 安全序列是一组进程的执行顺序<code>&lt;p2,p1,p3...&gt;</code>, 如果按照这个顺序执行, 执行到每个进程时, 这个进程需要的资源量不超过系统当前剩余资源量与这个进程顺序之前的进程资源占有量之和. 在这种情况下, 如果进程 Pi 所需要的资源超过系统当前剩余量, 即使不能立即可用, Pi 可以等待前面的进程完成时释放资源, 仍可以得到想要的资源. 如果找不到这样一个安全序列, 则系统处于不安全状态, 不安全状态会导致死锁.</p>
+<p>如何寻找一个安全序列? 抽象考虑以上情况, 这种问题与银行贷款问题相似, 都属于资源分配问题. 因此可以采用银行家算法.</p>
+<p>采用银行家算法有几个条件需要满足: 1. 进程数固定、资源数固定; 2. 已知每个进程的资源最大需求量; 3. 进程申请数不能超过系统可用资源数; 4. 进程等待时间是有限的(不能饥饿); 5. 进程使用一定时间后归还资源.</p>
+<p>银行家算法使用多个一维或多维数组记录了系统分配资源的状态: </p>
+<ul>
+<li>Available —— 系统可用资源(剩余 + 已占用)</li>
+<li>Max —— 每个进程需要的所有资源</li>
+<li>Allocation —— 某时每个进程占有的资源</li>
+<li>Need —— 每个进程还需要的资源</li>
+<li>Request —— 某个进程当前请求的资源</li>
+</ul>
+<p>采用这些变量实时记录系统分配资源的状态, 每次进程请求时, 判断 Request 是否小于 Available, 小于则分配, 大于则等待.</p>
+<p><strong>死锁发生时检测并恢复</strong></p>
+<p>这类方案采用消极方法, 检测到发生了死锁再恢复.</p>
+<p><strong>死锁检测时机</strong></p>
+<ul>
+<li>当进程申请不到资源而等待时 —— 频率高、代价大</li>
+<li>定时监测</li>
+<li>系统资源利用率下降到固定阈值</li>
+</ul>
+<p><strong>死锁检测算法</strong></p>
+<p>分别维护一个资源分配表(哪个进程占用哪个资源)和一个进程等待表(哪个进程等待哪个资源), 从进程等待表找出一个进程, 找到它等待的资源, 在资源分配表查哪个进程占用了这个资源, 再在等待表查这个进程有没有等待, 有的话等待哪个资源…就这样在两个表之间来回查找, 如果回到原点说明有环存在, 即发生死锁.</p>
+<p><strong>死锁解除</strong></p>
+<ul>
+<li>撤销所有进程——代价大</li>
+<li>进程回退再启动(基于系统日志) ,再启动很小几率会再次导致死锁, 别忘了, 死锁是偶然情况 —— 代价大</li>
+<li>按某规则逐一撤销进程</li>
+<li>按某规则逐一剥脱已占有资源</li>
+</ul>
+<h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h3><p>内存是计算机运行的中心, 程序需要装载到内存中才能运行. 多个进程被分配到内存中的指定地址空间, 由CPU来从内存中提取指令并执行, 执行进程所产生的数据会保存在进程相应地址空间. 进程在内存中的地址空间是独立的, 由基地址和界限地址确定, 访问不合法的地址会导致寻址错误. 程序在执行时生成的地址称为逻辑地址, 需要经过操作系统的地址映射为内存中的物理地址, 这一过程被称为地址重定位. 地址重定位由内存管理单元MMU硬件来完成. </p>
+<p>地址重定位有多种映射方案, 每种方案的设计可以从如下几个方面考虑 :</p>
+<ul>
+<li>硬件支持 —— 重定位发生频率非常高, 需专门的硬件配合共同设计;</li>
+<li>性能</li>
+<li>碎片—— 内存空间被分成块时, 进程所占用的地址空间小于分配的块所产生的剩余空间, 这些剩余不连续导致</li>
+<li>共享 —— 相同的程序和数据可以共享同一块内存节省空间</li>
+<li>保护 —— 进程有些程序和数据不能被其他进程访问</li>
+<li>交换 —— 方便交换(交换是内存的帮手, 内存装不下或者等待的进程可以交换到备用存储上, 用时再交换回去)</li>
+</ul>
+<h4 id="连续内存分配"><a href="#连续内存分配" class="headerlink" title="连续内存分配"></a>连续内存分配</h4><p>CPU 调度程序调度一个进程时, 作为上下文切换的一部分, 调度程序会初始化重定位寄存器和界限地址寄存器</p>
+</div><div class="tags"><a href="/tags/操作系统/">操作系统</a></div><div class="post-share"></div><div class="post-nav"><a href="/2018/05/02/a-comprehensive-understanding-of-HTTP/" class="next">全面了解HTTP</a></div><div id="comments"><div id="container"></div></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="React"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">文章目录</i></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#正文"><span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#操作系统概述"><span class="toc-text">操作系统概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#进程、线程模型"><span class="toc-text">进程、线程模型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#同步机制"><span class="toc-text">同步机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#死锁"><span class="toc-text">死锁</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#内存管理"><span class="toc-text">内存管理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#连续内存分配"><span class="toc-text">连续内存分配</span></a></li></ol></li></ol></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/06/29/操作系统了解一下/">learning-about-the-operating-system</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/05/02/a-comprehensive-understanding-of-HTTP/">全面了解HTTP</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/17/react-source-code-analysis-3-update/">React源码分析(三)-全面剖析组件更新机制</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/03/17/react-source-code-analysis-2-initial-render/">React源码分析(二)-组件的初始渲染</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/02/11/react-source-code-analysis-1-after-ReactDOM.render/">React源码分析(一)-调用ReactDOM.render后发生了什么</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/21/认识node核心模块-网络编程/">认识node核心模块--网络编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/10/认识node核心模块-从Buffer、Stream到fs/">认识node核心模块--从Buffer、Stream到fs</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/03/认识node核心模块-深入EventEmitter/">认识node核心模块--深入EventEmitter</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/25/认识node核心模块-全局对象及Cluster/">认识node核心模块--全局对象及Cluster</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/10/14/node核心特性理解/">node核心特性理解</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> 标签</i></div><div class="tagcloud"><a href="/tags/React基础/" style="font-size: 15px;">React基础</a> <a href="/tags/JavaScript/" style="font-size: 15px;">JavaScript</a> <a href="/tags/感想/" style="font-size: 15px;">感想</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/React架构/" style="font-size: 15px;">React架构</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/node/" style="font-size: 15px;">node</a> <a href="/tags/node基础/" style="font-size: 15px;">node基础</a> <a href="/tags/dva/" style="font-size: 15px;">dva</a> <a href="/tags/源码分析/" style="font-size: 15px;">源码分析</a> <a href="/tags/JavaScript函数/" style="font-size: 15px;">JavaScript函数</a> <a href="/tags/Redux/" style="font-size: 15px;">Redux</a> <a href="/tags/Redux-saga/" style="font-size: 15px;">Redux saga</a> <a href="/tags/前端工程师/" style="font-size: 15px;">前端工程师</a> <a href="/tags/职业规划/" style="font-size: 15px;">职业规划</a> <a href="/tags/JavaScript对象/" style="font-size: 15px;">JavaScript对象</a> <a href="/tags/操作系统/" style="font-size: 15px;">操作系统</a> <a href="/tags/事件循环机制/" style="font-size: 15px;">事件循环机制</a> <a href="/tags/实习/" style="font-size: 15px;">实习</a> <a href="/tags/面试题/" style="font-size: 15px;">面试题</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> 归档</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/02/">二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/08/">八月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> 友情链接</i></div><ul></ul><a href="http://mofan_tcg.coding.me/" title="时光笔记" target="_blank">时光笔记</a><ul></ul><a href="http://realtcg.com/Precious-Memories/" title="React小相册" target="_blank">React小相册</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p>你的梦想是这个世界上最伟大的事情</p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次</p><p><span> Copyright &copy;<a href="/." rel="nofollow">mofan.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/MrStronger/hexo-theme-Mofan"> Mofan.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span></p></div></div></div><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?3f3a5a8fd2b4cc3b3813fd00426fa25d";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+  })();
+</script><script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script><script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script><script>var gitment = new Gitment({
+  id: 'learning-about-the-operating-system', // 可选。默认为 location.href
+  owner: 'MrStronger',
+  repo: 'blogcomment',
+  oauth: {
+    client_id: '0a99d84bb46f7cda7fce',
+    client_secret: 'b3915ea2a1e5364a698ec8335e34092ad6bc42d0',
+  },
+})
+gitment.render('container')
+</script></body></html>
